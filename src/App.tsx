@@ -4,7 +4,6 @@ import { createGlobalStyle, ThemeProvider } from 'styled-components'
 import { UseWalletProvider } from '@binance-chain/bsc-use-wallet'
 import MobileMenu from './components/MobileMenu'
 import ModalsProvider from './contexts/Modals'
-import PresaleProvider from './contexts/PresaleProvider'
 import { lightTheme } from './theme'
 import Home from './views/Home'
 import Dashboard from './views/Dashboard'
@@ -50,9 +49,7 @@ const Providers: React.FC = ({ children }) => {
           walletconnect: { rpcUrl: 'https://bsc-dataseed.binance.org/' },
         }}
       >
-        <PresaleProvider>
-          <ModalsProvider>{children}</ModalsProvider>
-        </PresaleProvider>
+        <ModalsProvider>{children}</ModalsProvider>
       </UseWalletProvider>
     </ThemeProvider>
     // </div>

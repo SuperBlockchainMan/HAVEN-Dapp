@@ -1,10 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import styled from 'styled-components'
 import Page from '../../components/Page'
-import ERC20ABI from '../../presale/lib/abi/presaleErc20.json'
-import Web3 from 'web3'
-import { AbiItem } from 'web3-utils'
-import Binance from 'binance-api-node'
 import AccountButton from '../../components/TopBar/components/AccountButton'
 import TopBar from '../../components/TopBar'
 
@@ -54,15 +50,9 @@ const StyledAccountButton = styled.div`
 `
 
 const Home: React.FC = () => {
-  const [mobileMenu, setMobileMenu] = useState(false)
-
-  const handlePresentMobileMenu = useCallback(() => {
-    setMobileMenu(true)
-  }, [setMobileMenu])
-
   return (
     <Page>
-      <TopBar onPresentMobileMenu={handlePresentMobileMenu} />
+      <TopBar />
       <StyledContainer>
         <StyledIcon src="assets/image/icon.png" />
         <div> Welcome to HAVEN Dapp </div>
@@ -78,7 +68,6 @@ const Home: React.FC = () => {
             <br />
           </div>
         </StyledDescription>
-
         <StyledAccountButton>
           <AccountButton />
         </StyledAccountButton>

@@ -1,7 +1,6 @@
 import React, { useCallback } from 'react'
 import styled from 'styled-components'
 import * as bsc from '@binance-chain/bsc-use-wallet'
-import useTokenA from '../../../hooks/useTokenA'
 import Button from '../../Button'
 import CardIcon from '../../CardIcon'
 import Modal, { ModalProps } from '../../Modal'
@@ -20,8 +19,6 @@ const AccountModal: React.FC<ModalProps> = ({ onDismiss }) => {
     onDismiss!()
     reset()
   }, [onDismiss, reset])
-
-  const tokenA = useTokenA()
 
   return (
     <div>

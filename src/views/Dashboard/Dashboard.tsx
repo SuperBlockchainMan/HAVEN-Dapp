@@ -6,17 +6,13 @@ import PageHeader from '../../components/PageHeader'
 import { Input } from '@material-ui/core'
 import * as bsc from '@binance-chain/bsc-use-wallet'
 import BigNumber from 'bignumber.js'
-import usePresale from '../../hooks/usePresale'
-import { deposit } from '../../presale/utils'
 import { useMediaQuery } from 'react-responsive'
-import Value from '../../components/Value'
-import ERC20ABI from '../../presale/lib/abi/presaleErc20.json'
+import ERC20ABI from '../../constants/abi/HAVEN.json'
 import Web3 from 'web3'
 import { AbiItem } from 'web3-utils'
 import Binance from 'binance-api-node'
 import mainImg from '../../assets/img/icon.png'
 import { useHistory } from 'react-router-dom'
-import Balances from './components/Balances'
 import WriteClaim from './components/WriteClaim'
 import ReadContractItem from './components/ReadContractItem'
 
@@ -71,8 +67,10 @@ const Home: React.FC = () => {
   )
 
   const getLeftTime = async () => {
-    const leftTimeNum = await presaleContract.methods.getLeftTimeAmount().call()
-    setCountTime(new BigNumber(leftTimeNum).toNumber() * 1000)
+    // const maxTxAmount = await presaleContract.methods._maxTxAmount()
+    console.log('pooh, maxTxAmount = ', presaleContract.methods)
+    // const leftTimeNum = await presaleContract.methods.getLeftTimeAmount().call()
+    // setCountTime(new BigNumber(leftTimeNum).toNumber() * 1000)
   }
   getLeftTime()
 
@@ -81,12 +79,6 @@ const Home: React.FC = () => {
   const depositInputChange = (e: any) => {
     let depositVal = e.target.value
     setDepositNum(depositVal)
-  }
-
-  const presale = usePresale()
-
-  const depositEther = () => {
-    deposit(presale, account, depositInput)
   }
 
   console.log('pooh, wallet account = ', wallet.account)

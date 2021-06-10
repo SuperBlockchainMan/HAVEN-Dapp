@@ -2,13 +2,8 @@ import React from 'react'
 import styled from 'styled-components'
 import Container from '../Container'
 import Logo from '../Logo'
-import AccountButton from './components/AccountButton'
 
-interface TopBarProps {
-  onPresentMobileMenu: () => void
-}
-
-const TopBar: React.FC<TopBarProps> = ({ onPresentMobileMenu }) => {
+const TopBar: React.FC = () => {
   return (
     <Container size="lg">
       <StyledTopBarInner>
