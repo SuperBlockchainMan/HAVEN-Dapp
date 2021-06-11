@@ -10,6 +10,8 @@ interface PageHeaderProps {
   title?: string
   description?: string
   account?: string
+  balance?: number
+  price?: number
 }
 
 const PageHeader: React.FC<PageHeaderProps> = ({
@@ -17,6 +19,8 @@ const PageHeader: React.FC<PageHeaderProps> = ({
   title,
   description,
   account,
+  balance,
+  price,
 }) => {
   const { reset } = bsc.useWallet()
   const handleSignOutClick = useCallback(() => {
@@ -33,6 +37,9 @@ const PageHeader: React.FC<PageHeaderProps> = ({
     }
     return ''
   }
+
+  const myBalance = 'HAVEN ' + balance
+  const token = '(' + (balance * price).toFixed(2) + ' $)'
 
   const buyAddress =
     'https://exchange.pancakeswap.finance/#/swap?outputCurrency=0x0E3EAF83Ea93Abe756690C62c72284943b96a6Bc'
@@ -54,8 +61,8 @@ const PageHeader: React.FC<PageHeaderProps> = ({
           <StyledInfo>{getAccountAddress()}</StyledInfo>
           <br />
           <StyledDetailSubTitle>Your HAVEN balance</StyledDetailSubTitle>
-          <StyledInfo>HAVEN 0.00</StyledInfo>
-          <StyledInfo>(0.00 $)</StyledInfo>
+          <StyledInfo>{myBalance}</StyledInfo>
+          <StyledInfo>{token}</StyledInfo>
         </StyledDetail>
         <StyledSignoutButtonArea>
           <Button

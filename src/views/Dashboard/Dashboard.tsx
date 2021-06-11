@@ -7,7 +7,8 @@ import { Input } from '@material-ui/core'
 import * as bsc from '@binance-chain/bsc-use-wallet'
 import BigNumber from 'bignumber.js'
 import { useMediaQuery } from 'react-responsive'
-import ERC20ABI from '../../constants/abi/HAVEN.json'
+import HAVENABI from '../../constants/abi/HAVEN.json'
+import WBNBABI from '../../constants/abi/WBNB.json'
 import Web3 from 'web3'
 import { AbiItem } from 'web3-utils'
 import Binance from 'binance-api-node'
@@ -24,64 +25,92 @@ let launchTime = Math.abs(startTime.getTime() - endTime.getTime())
 
 const Home: React.FC = () => {
   const history = useHistory()
-  const isDesktopOrLaptop = useMediaQuery({
-    query: '(min-width: 768px)',
-  })
-
-  const [tokenPrice, setNum] = useState(0)
-
-  const getBnbPrice = async () => {
-    let ticker = await binance.prices({ symbol: 'BNBUSDT' })
-    let price = Number(ticker['BNBUSDT'])
-    setNum(price / 620000)
-  }
-  getBnbPrice()
-
-  const { account }: { account: any } = bsc.useWallet()
-
   const wallet = bsc.useWallet()
 
-  let description = (
-    <div
-      style={{
-        textAlign: 'center',
-        fontSize: '26px',
-        fontFamily: 'Optima',
-        color: 'black',
-        lineHeight: '48px',
-        fontWeight: 'bold',
-      }}
-    >
-      <span>Join The Presale</span>
-    </div>
-  )
-
-  const [leftTime, setCountTime] = useState(0)
+  const [maxTransaction, setMaxTransaction] = useState('')
+  const [totalBNB, setTotalBNB] = useState('')
+  const [BNBPrice, setBNBPrice] = useState(0)
+  const [HAVENPrice, setHAVENPrice] = useState(0)
+  const [currencyPrice, setCurrencyPrice] = useState('')
+  const [currentBalance, setCurrencyBalance] = useState(0)
 
   const web3 = new Web3(
     new Web3.providers.HttpProvider('https://bsc-dataseed.binance.org'),
   )
-  const presaleContract = new web3.eth.Contract(
-    ERC20ABI as unknown as AbiItem,
-    '0x703b17E4BAB6f44af7DDB2F19D3Bf146153e9FF3',
+  const HAVENContract = new web3.eth.Contract(
+    HAVENABI as unknown as AbiItem,
+    '0xbd829ad7540e127c9ad6231457693dcac1938ee2',
   )
 
-  const getLeftTime = async () => {
-    // const maxTxAmount = await presaleContract.methods._maxTxAmount()
-    console.log('pooh, maxTxAmount = ', presaleContract.methods)
-    // const leftTimeNum = await presaleContract.methods.getLeftTimeAmount().call()
-    // setCountTime(new BigNumber(leftTimeNum).toNumber() * 1000)
+  const WBNBContract = new web3.eth.Contract(
+    WBNBABI as unknown as AbiItem,
+    '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c',
+  )
+
+  const getBNBPrice = async () => {
+    const prices = await fetch(
+      'https://api3.binance.com/api/v3/ticker/price',
+    ).then((response) => {
+      if (!response.ok) {
+        throw new Error(response.statusText)
+      }
+      return response.json()
+    })
+    setBNBPrice(prices[98].price)
   }
-  getLeftTime()
 
-  const [depositInput, setDepositNum] = useState(0)
-
-  const depositInputChange = (e: any) => {
-    let depositVal = e.target.value
-    setDepositNum(depositVal)
+  const getMaxTransactionAmount = async () => {
+    const maxTransactionAmount = await HAVENContract.methods
+      ._maxTxAmount()
+      .call()
+    setMaxTransaction('$HAVEN ' + maxTransactionAmount / 1000000000)
+    console.log('pooh, maxTxAmount = ', maxTransactionAmount)
   }
 
-  console.log('pooh, wallet account = ', wallet.account)
+  const getTotalLiquidityPool = async () => {
+    console.log('pooh, totalLiquidityPool = ')
+  }
+
+  const getTotalBNBInLiquidityPool = async () => {
+    const totalBNBInLiquidityPool = await WBNBContract.methods
+      .balanceOf('0x73e3242116d8338eb2447a40228ef2b2fb9b9994')
+      .call()
+    setTotalBNB(
+      web3.utils.fromWei(
+        web3.utils.toBN(totalBNBInLiquidityPool).toString(),
+        'ether',
+      ) + ' BNB',
+    )
+  }
+
+  const getCurrentHAVENPrice = async () => {
+    const totalBNBInLiquidityPool = await WBNBContract.methods
+      .balanceOf('0x73e3242116d8338eb2447a40228ef2b2fb9b9994')
+      .call()
+    const totalHAVENInLiquidityPool = await HAVENContract.methods
+      .balanceOf('0x73e3242116d8338eb2447a40228ef2b2fb9b9994')
+      .call()
+
+    const price = web3.utils
+      .toBN(totalBNBInLiquidityPool)
+      .div(web3.utils.toBN(totalHAVENInLiquidityPool))
+      .toNumber()
+
+    setHAVENPrice(price / 1000000000)
+    setCurrencyPrice((price / 1000000000).toString() + ' BNB')
+  }
+
+  const getCurrentHAVENBalance = async () => {
+    const balance = await HAVENContract.methods.balanceOf(wallet.account).call()
+    setCurrencyBalance(web3.utils.toBN(balance).toNumber() / 1000000000)
+  }
+
+  getBNBPrice()
+  getMaxTransactionAmount()
+  getTotalLiquidityPool()
+  getTotalBNBInLiquidityPool()
+  getCurrentHAVENPrice()
+  getCurrentHAVENBalance()
 
   if (wallet.account == null) {
     history.push('/')
@@ -98,6 +127,8 @@ const Home: React.FC = () => {
             title="HAVEN"
             description="Earn BNB by Holding HAVEN"
             account={wallet.account}
+            balance={currentBalance}
+            price={HAVENPrice * BNBPrice}
           />
         </StyledDetail>
         <StyledContractArea>
@@ -106,7 +137,7 @@ const Home: React.FC = () => {
             <ReadContractItem
               icon={mainImg}
               title="Max Transaction Amount"
-              description={'1,000,000 MKAT | 2.6 BNB'}
+              description={maxTransaction}
             />
             <ReadContractItem
               icon={mainImg}
@@ -116,12 +147,12 @@ const Home: React.FC = () => {
             <ReadContractItem
               icon={mainImg}
               title="Total BNB in liquidity pool"
-              description="0 BNB"
+              description={totalBNB}
             />
             <ReadContractItem
               icon={mainImg}
-              title="Current 100,000 MKAT price"
-              description="0.26 BNB"
+              title="Current 100,000 HAVEN price"
+              description={currencyPrice}
             />
           </StyledContractDetail>
         </StyledContractArea>
