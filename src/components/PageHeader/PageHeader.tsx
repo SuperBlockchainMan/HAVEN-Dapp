@@ -3,7 +3,6 @@ import styled from 'styled-components'
 import * as bsc from '@binance-chain/bsc-use-wallet'
 import Button from '../../components/Button'
 import Container from '../Container'
-import { Link } from 'react-router-dom'
 
 interface PageHeaderProps {
   icon: React.ReactNode

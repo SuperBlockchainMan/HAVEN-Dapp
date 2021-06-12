@@ -4,6 +4,7 @@ import { createGlobalStyle, ThemeProvider } from 'styled-components'
 import { UseWalletProvider } from '@binance-chain/bsc-use-wallet'
 import MobileMenu from './components/MobileMenu'
 import ModalsProvider from './contexts/Modals'
+import TokenContractProvider from './contexts/TokenContractProvider'
 import { lightTheme } from './theme'
 import Home from './views/Home'
 import Dashboard from './views/Dashboard'
@@ -23,17 +24,19 @@ const App: React.FC = () => {
 
   return (
     <Providers>
-      <Router>
-        <MobileMenu onDismiss={handleDismissMobileMenu} visible={mobileMenu} />
-        <Switch>
-          <Route path="/" exact>
-            <Home />
-          </Route>
-          <Route path="/dashboard" exact>
-            <Dashboard />
-          </Route>
-        </Switch>
-      </Router>
+      <TokenContractProvider>
+        <Router>
+          <MobileMenu onDismiss={handleDismissMobileMenu} visible={mobileMenu} />
+          <Switch>
+            <Route path="/" exact>
+              <Home />
+            </Route>
+            <Route path="/dashboard" exact>
+              <Dashboard />
+            </Route>
+          </Switch>
+        </Router>
+      </TokenContractProvider>
     </Providers>
   )
 }

@@ -72,7 +72,7 @@ const ReadContractItem: React.FC<ReadContractItemProps> = ({
     <StyledArea>
       <StyledIconArea>
         <StyledIcon>
-          <img style={{ width: 70, borderRadius: 25 }} src={icon} />
+          <img style={{ height: 80, borderRadius: 25 }} src={icon} />
         </StyledIcon>
       </StyledIconArea>
       <StyledInfoArea>

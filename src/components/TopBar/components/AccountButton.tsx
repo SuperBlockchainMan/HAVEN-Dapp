@@ -19,18 +19,18 @@ const AccountButton: React.FC<AccountButtonProps> = (props) => {
 
   const { account } = bsc.useWallet()
 
-  console.log('pooh, account = ', account)
-
   const handleUnlockClick = useCallback(() => {
     onPresentWalletProviderModal()
   }, [onPresentWalletProviderModal])
 
   const getAccountAddress = () => {
-    var address =
-      account.toString().substring(0, 8) +
-      '...' +
-      account.toString().substr(account.length - 8)
-    return address
+    if (account) {
+      var address =
+        account.toString().substring(0, 8) +
+        '...' +
+        account.toString().substr(account.length - 8)
+      return address
+    }
   }
 
   if (account) {

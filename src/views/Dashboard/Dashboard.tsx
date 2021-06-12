@@ -11,24 +11,28 @@ import HAVENABI from '../../constants/abi/HAVEN.json'
 import WBNBABI from '../../constants/abi/WBNB.json'
 import Web3 from 'web3'
 import { AbiItem } from 'web3-utils'
-import Binance from 'binance-api-node'
 import mainImg from '../../assets/img/icon.png'
+import bnbInPool from '../../assets/img/bnb_in_pool.png'
+import currentPrice from '../../assets/img/current_price.png'
+import liquidityPool from '../../assets/img/liquidity_pool.png'
+import maxAmount from '../../assets/img/max_transaction_amount.png'
+import rewardPool from '../../assets/img/reward_pool.png'
 import { useHistory } from 'react-router-dom'
 import WriteClaim from './components/WriteClaim'
 import ReadContractItem from './components/ReadContractItem'
-
-const binance = Binance()
-
-let startTime = new Date()
-let endTime = new Date('03/23/2021 5:16')
-let launchTime = Math.abs(startTime.getTime() - endTime.getTime())
 
 const Home: React.FC = () => {
   const history = useHistory()
   const wallet = bsc.useWallet()
 
+  if (wallet.account == null) {
+    history.push('/')
+  }
+
   const [maxTransaction, setMaxTransaction] = useState('')
   const [totalBNB, setTotalBNB] = useState('')
+  const [totalBNBValue, setTotalBNBValue] = useState(0)
+  const [totalLiquidity, setTotalLiquidity] = useState('')
   const [BNBPrice, setBNBPrice] = useState(0)
   const [HAVENPrice, setHAVENPrice] = useState(0)
   const [currencyPrice, setCurrencyPrice] = useState('')
@@ -37,6 +41,7 @@ const Home: React.FC = () => {
   const web3 = new Web3(
     new Web3.providers.HttpProvider('https://bsc-dataseed.binance.org'),
   )
+
   const HAVENContract = new web3.eth.Contract(
     HAVENABI as unknown as AbiItem,
     '0xbd829ad7540e127c9ad6231457693dcac1938ee2',
@@ -64,17 +69,13 @@ const Home: React.FC = () => {
       ._maxTxAmount()
       .call()
     setMaxTransaction('$HAVEN ' + maxTransactionAmount / 1000000000)
-    console.log('pooh, maxTxAmount = ', maxTransactionAmount)
-  }
-
-  const getTotalLiquidityPool = async () => {
-    console.log('pooh, totalLiquidityPool = ')
   }
 
   const getTotalBNBInLiquidityPool = async () => {
     const totalBNBInLiquidityPool = await WBNBContract.methods
       .balanceOf('0x73e3242116d8338eb2447a40228ef2b2fb9b9994')
       .call()
+    setTotalBNBValue(totalBNBInLiquidityPool)
     setTotalBNB(
       web3.utils.fromWei(
         web3.utils.toBN(totalBNBInLiquidityPool).toString(),
@@ -101,20 +102,28 @@ const Home: React.FC = () => {
   }
 
   const getCurrentHAVENBalance = async () => {
-    const balance = await HAVENContract.methods.balanceOf(wallet.account).call()
-    setCurrencyBalance(web3.utils.toBN(balance).toNumber() / 1000000000)
+    if (wallet.account) {
+      const balance = await HAVENContract.methods
+        .balanceOf(wallet.account)
+        .call()
+      setCurrencyBalance(web3.utils.toBN(balance).toNumber() / 1000000000)
+    }
   }
+
+  // const getTotalLiquidityPool = () => {
+  //   console.log('pooh, totalBNBValue = ', totalBNBValue)
+  //   setTotalLiquidity(
+  //     '$ ' + ((totalBNBValue * BNBPrice) / 1000000000000000000).toString(),
+  //   )
+  // }
 
   getBNBPrice()
   getMaxTransactionAmount()
-  getTotalLiquidityPool()
   getTotalBNBInLiquidityPool()
   getCurrentHAVENPrice()
   getCurrentHAVENBalance()
-
-  if (wallet.account == null) {
-    history.push('/')
-  }
+  // getTotalLiquidityPool()
+  
 
   return (
     <Page>
@@ -126,7 +135,7 @@ const Home: React.FC = () => {
             }
             title="HAVEN"
             description="Earn BNB by Holding HAVEN"
-            account={wallet.account}
+            account={wallet ? wallet.account : ''}
             balance={currentBalance}
             price={HAVENPrice * BNBPrice}
           />
@@ -135,22 +144,22 @@ const Home: React.FC = () => {
           <WriteClaim />
           <StyledContractDetail>
             <ReadContractItem
-              icon={mainImg}
+              icon={maxAmount}
               title="Max Transaction Amount"
               description={maxTransaction}
             />
             <ReadContractItem
-              icon={mainImg}
+              icon={liquidityPool}
               title="Total Liquidity Pool"
-              description="$ 3,044,668.38"
+              description={'$ ' + ((totalBNBValue * BNBPrice) / 1000000000000000000).toString()}
             />
             <ReadContractItem
-              icon={mainImg}
+              icon={bnbInPool}
               title="Total BNB in liquidity pool"
               description={totalBNB}
             />
             <ReadContractItem
-              icon={mainImg}
+              icon={currentPrice}
               title="Current 100,000 HAVEN price"
               description={currencyPrice}
             />
@@ -182,6 +191,7 @@ const StyledContractArea = styled.div`
   flex: 0 0 75%;
   max-width: 75%;
   pading: 10px;
+  margin-top: 30px;
 `
 
 const StyledContractDetail = styled.div`

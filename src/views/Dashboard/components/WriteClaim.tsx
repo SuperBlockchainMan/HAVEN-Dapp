@@ -1,8 +1,16 @@
 import BigNumber from 'bignumber.js'
 import React, { useEffect, useState } from 'react'
+import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
+import Web3 from 'web3'
+import { AbiItem } from 'web3-utils'
+import * as bsc from '@binance-chain/bsc-use-wallet'
 import Button from '../../../components/Button'
-import mainImg from '../../../assets/img/icon.png'
+import rewardPool from '../../../assets/img/reward_pool.png'
+import HAVENABI from '../../../constants/abi/HAVEN.json'
+import { claimBNBReward } from '../../../tokencontract/utils'
+import useTokenContract from '../../../hooks/useTokenContract'
+import { POINT_CONVERSION_HYBRID } from 'constants'
 
 const StyledArea = styled.div`
   box-sizing: border-box;
@@ -73,16 +81,61 @@ const StyledValue = styled.span`
 `
 
 const WriteClaim: React.FC = () => {
+  const history = useHistory()
+  const [calculatedReward, setCalculatedReward] = useState(0)
+  const [BNBRewardPool, setRewardPool] = useState('')
+
+  const wallet = bsc.useWallet()
+
+  if (wallet.account == null) {
+    history.push('/')
+  }
+
+  const web3 = new Web3(
+    new Web3.providers.HttpProvider('https://bsc-dataseed.binance.org'),
+  )
+
+  const HAVENContract = new web3.eth.Contract(
+    HAVENABI as unknown as AbiItem,
+    '0xbd829ad7540e127c9ad6231457693dcac1938ee2',
+  )
+
+  const getBalance = async () => {
+    const balance = await web3.eth.getBalance('0xBD829ad7540E127C9AD6231457693dCAC1938ee2');
+    setRewardPool(web3.utils.fromWei(
+        web3.utils.toBN(balance).toString(),
+        'ether',
+      ))
+  }
+
+  const getMaxTransactionAmount = async () => {
+    if (wallet.account) {
+      const reward = await HAVENContract.methods
+        .calculateBNBReward(wallet.account)
+        .call()
+      setCalculatedReward(reward / 1000000000000000000)
+    }
+  }
+
+  const tokenContract = useTokenContract();
+
+  const handleClaimClick = () => {
+    claimBNBReward(tokenContract)
+  }
+
+  getMaxTransactionAmount()
+  getBalance()
+
   return (
     <StyledArea>
       <StyledIconArea>
         <StyledInfo> Reward Pool </StyledInfo>
         <StyledIcon>
-          <img style={{ width: 70, borderRadius: 25 }} src={mainImg} />
+          <img style={{ height: 80, borderRadius: 25 }} src={rewardPool} />
         </StyledIcon>
-        <StyledInfo> BNB 0.00 </StyledInfo>
-        <br />
-        <StyledInfo> Gift : $HAVEN 200 </StyledInfo>
+        <StyledInfo> BNB {BNBRewardPool} </StyledInfo>
+        {/* <br />
+        <StyledInfo> Gift : $HAVEN 200 </StyledInfo> */}
       </StyledIconArea>
       <StyledInfoArea>
         <StyledInfo>
@@ -97,9 +150,11 @@ const WriteClaim: React.FC = () => {
             </a>
           </span>
         </StyledNote>
-        <StyledInfo>You will be received 0.000000 BNB (after tax)</StyledInfo>
+        <StyledInfo>
+          You will be received {calculatedReward} BNB (after tax)
+        </StyledInfo>
         <StyledClaimButtonArea>
-          <Button>
+          <Button onClick={handleClaimClick}>
             <span>
               <i className="fa fa-gift"></i> Claim My Reward
             </span>
