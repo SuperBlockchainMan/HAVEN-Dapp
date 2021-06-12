@@ -10,7 +10,7 @@ import rewardPool from '../../../assets/img/reward_pool.png'
 import HAVENABI from '../../../constants/abi/HAVEN.json'
 import { claimBNBReward } from '../../../tokencontract/utils'
 import useTokenContract from '../../../hooks/useTokenContract'
-import { POINT_CONVERSION_HYBRID } from 'constants'
+import { HAVENTokenAddress } from '../../../constants/tokenAddresses'
 
 const StyledArea = styled.div`
   box-sizing: border-box;
@@ -97,15 +97,14 @@ const WriteClaim: React.FC = () => {
 
   const HAVENContract = new web3.eth.Contract(
     HAVENABI as unknown as AbiItem,
-    '0xbd829ad7540e127c9ad6231457693dcac1938ee2',
+    HAVENTokenAddress,
   )
 
   const getBalance = async () => {
-    const balance = await web3.eth.getBalance('0xBD829ad7540E127C9AD6231457693dCAC1938ee2');
-    setRewardPool(web3.utils.fromWei(
-        web3.utils.toBN(balance).toString(),
-        'ether',
-      ))
+    const balance = await web3.eth.getBalance(HAVENTokenAddress)
+    setRewardPool(
+      web3.utils.fromWei(web3.utils.toBN(balance).toString(), 'ether'),
+    )
   }
 
   const getMaxTransactionAmount = async () => {
@@ -117,7 +116,7 @@ const WriteClaim: React.FC = () => {
     }
   }
 
-  const tokenContract = useTokenContract();
+  const tokenContract = useTokenContract()
 
   const handleClaimClick = () => {
     claimBNBReward(tokenContract)

@@ -1,4 +1,3 @@
-export const tokenA = '0x0e2298e3b3390e3b945a5456fbf59ecc3f55da16'
-export const tokenAv2 = '0xaba8cac6866b83ae4eec97dd07ed254282f6ad8a'
-export const tokenAAddress = '0x43a7903E3a839a67192151eE300e11198985E54b'
-export const masterChefAddress = '0x245A074cA9814fB46A21562bC70fAB92F8A3F779'
+export const HAVENTokenAddress = '0xbd829ad7540e127c9ad6231457693dcac1938ee2'
+export const HAVENPairAddress = '0x73e3242116d8338eb2447a40228ef2b2fb9b9994'
+export const WBNBAddress = '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c'

@@ -20,6 +20,11 @@ import rewardPool from '../../assets/img/reward_pool.png'
 import { useHistory } from 'react-router-dom'
 import WriteClaim from './components/WriteClaim'
 import ReadContractItem from './components/ReadContractItem'
+import {
+  HAVENTokenAddress,
+  HAVENPairAddress,
+  WBNBAddress,
+} from '../../constants/tokenAddresses'
 
 const Home: React.FC = () => {
   const history = useHistory()
@@ -44,12 +49,12 @@ const Home: React.FC = () => {
 
   const HAVENContract = new web3.eth.Contract(
     HAVENABI as unknown as AbiItem,
-    '0xbd829ad7540e127c9ad6231457693dcac1938ee2',
+    HAVENTokenAddress,
   )
 
   const WBNBContract = new web3.eth.Contract(
     WBNBABI as unknown as AbiItem,
-    '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c',
+    WBNBAddress,
   )
 
   const getBNBPrice = async () => {
@@ -73,7 +78,7 @@ const Home: React.FC = () => {
 
   const getTotalBNBInLiquidityPool = async () => {
     const totalBNBInLiquidityPool = await WBNBContract.methods
-      .balanceOf('0x73e3242116d8338eb2447a40228ef2b2fb9b9994')
+      .balanceOf(HAVENPairAddress)
       .call()
     setTotalBNBValue(totalBNBInLiquidityPool)
     setTotalBNB(
@@ -86,10 +91,10 @@ const Home: React.FC = () => {
 
   const getCurrentHAVENPrice = async () => {
     const totalBNBInLiquidityPool = await WBNBContract.methods
-      .balanceOf('0x73e3242116d8338eb2447a40228ef2b2fb9b9994')
+      .balanceOf(HAVENPairAddress)
       .call()
     const totalHAVENInLiquidityPool = await HAVENContract.methods
-      .balanceOf('0x73e3242116d8338eb2447a40228ef2b2fb9b9994')
+      .balanceOf(HAVENPairAddress)
       .call()
 
     const price = web3.utils
@@ -123,7 +128,6 @@ const Home: React.FC = () => {
   getCurrentHAVENPrice()
   getCurrentHAVENBalance()
   // getTotalLiquidityPool()
-  
 
   return (
     <Page>
@@ -151,7 +155,10 @@ const Home: React.FC = () => {
             <ReadContractItem
               icon={liquidityPool}
               title="Total Liquidity Pool"
-              description={'$ ' + ((totalBNBValue * BNBPrice) / 1000000000000000000).toString()}
+              description={
+                '$ ' +
+                ((totalBNBValue * BNBPrice) / 1000000000000000000).toString()
+              }
             />
             <ReadContractItem
               icon={bnbInPool}
