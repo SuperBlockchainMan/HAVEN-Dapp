@@ -80,7 +80,11 @@ const StyledValue = styled.span`
   font-size: 24px;
 `
 
-const WriteClaim: React.FC = () => {
+interface WriteClaimProps {
+  claim: string
+}
+
+const WriteClaim: React.FC<WriteClaimProps> = ({ claim }) => {
   const history = useHistory()
   const [calculatedReward, setCalculatedReward] = useState(0)
   const [BNBRewardPool, setRewardPool] = useState('')
@@ -137,6 +141,7 @@ const WriteClaim: React.FC = () => {
         <StyledInfo> Gift : $HAVEN 200 </StyledInfo> */}
       </StyledIconArea>
       <StyledInfoArea>
+        <StyledInfo> {claim} </StyledInfo>
         <StyledInfo>
           My reward: <StyledValue>0.000000 BNB</StyledValue>
         </StyledInfo>

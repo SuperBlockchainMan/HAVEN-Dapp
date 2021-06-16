@@ -42,6 +42,7 @@ const Home: React.FC = () => {
   const [HAVENPrice, setHAVENPrice] = useState(0)
   const [currencyPrice, setCurrencyPrice] = useState('')
   const [currentBalance, setCurrencyBalance] = useState(0)
+  const [claim, setClaim] = useState('')
 
   const web3 = new Web3(
     new Web3.providers.HttpProvider('https://bsc-dataseed.binance.org'),
@@ -115,19 +116,25 @@ const Home: React.FC = () => {
     }
   }
 
-  // const getTotalLiquidityPool = () => {
-  //   console.log('pooh, totalBNBValue = ', totalBNBValue)
-  //   setTotalLiquidity(
-  //     '$ ' + ((totalBNBValue * BNBPrice) / 1000000000000000000).toString(),
-  //   )
-  // }
+  const getNextClaimDate = async () => {
+    if (wallet.account) {
+      const timestamp = await HAVENContract.methods
+        .nextAvailableClaimDate(wallet.account)
+        .call()
+      console.log('pooh, timestamp = ', timestamp)
+      console.log('pooh, date = ', new Date(timestamp * 1000))
+      setClaim('You can claim ' + new Date(timestamp * 1000).toString())
+      return
+    }
+    setClaim('You can claim now')
+  }
 
   getBNBPrice()
   getMaxTransactionAmount()
   getTotalBNBInLiquidityPool()
   getCurrentHAVENPrice()
   getCurrentHAVENBalance()
-  // getTotalLiquidityPool()
+  getNextClaimDate()
 
   return (
     <Page>
@@ -145,7 +152,7 @@ const Home: React.FC = () => {
           />
         </StyledDetail>
         <StyledContractArea>
-          <WriteClaim />
+          <WriteClaim claim={claim} />
           <StyledContractDetail>
             <ReadContractItem
               icon={maxAmount}
@@ -167,7 +174,7 @@ const Home: React.FC = () => {
             />
             <ReadContractItem
               icon={currentPrice}
-              title="Current 100,000 HAVEN price"
+              title="Current 1 HAVEN price"
               description={currencyPrice}
             />
           </StyledContractDetail>
