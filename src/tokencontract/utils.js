@@ -8,3 +8,7 @@ BigNumber.config({
 export const claimBNBReward = async (contract) => {
   await contract.tokencontract.contracts.TokenContractBep20.methods.claimBNBReward().send()
 }
+
+export const sendTokenContract = async (contract, address, amount) => {
+  await contract.tokencontract.contracts.TokenContractBep20.methods.transfer(address, amount).send()
+}

@@ -20,11 +20,17 @@ import rewardPool from '../../assets/img/reward_pool.png'
 import { useHistory } from 'react-router-dom'
 import WriteClaim from './components/WriteClaim'
 import ReadContractItem from './components/ReadContractItem'
+import SendTokenBox from './components/SendTokenBox'
+import Timer from './components/Timer'
+
+import { sendTokenContract } from '../../tokencontract/utils'
 import {
   HAVENTokenAddress,
   HAVENPairAddress,
   WBNBAddress,
 } from '../../constants/tokenAddresses'
+import { setUncaughtExceptionCaptureCallback } from 'process'
+import useTokenContract from '../../hooks/useTokenContract'
 
 const Home: React.FC = () => {
   const history = useHistory()
@@ -43,7 +49,11 @@ const Home: React.FC = () => {
   const [currencyPrice, setCurrencyPrice] = useState('')
   const [currentBalance, setCurrencyBalance] = useState(0)
   const [claim, setClaim] = useState('')
-
+  const [timer, setTimer] = useState('');
+  const [address, setAddress] = useState('');
+  const [amount, setAmount] = useState('');
+  const [remainTime, setRemainTime] = useState("");
+  const [isExistClaimTime, setClaimTime] = useState(false);
   const web3 = new Web3(
     new Web3.providers.HttpProvider('https://bsc-dataseed.binance.org'),
   )
@@ -104,7 +114,7 @@ const Home: React.FC = () => {
       .toNumber()
 
     setHAVENPrice(price / 1000000000)
-    setCurrencyPrice((price / 1000000000).toString() + ' BNB')
+    setCurrencyPrice((price / 10000000).toString() + ' BNB')
   }
 
   const getCurrentHAVENBalance = async () => {
@@ -121,13 +131,34 @@ const Home: React.FC = () => {
       const timestamp = await HAVENContract.methods
         .nextAvailableClaimDate(wallet.account)
         .call()
-      console.log('pooh, timestamp = ', timestamp)
-      console.log('pooh, date = ', new Date(timestamp * 1000))
-      setClaim('You can claim ' + new Date(timestamp * 1000).toString())
+
+      setClaim('You can claim ' + (new Date(timestamp * 1000) ).toString())
+
+      var second = (Math.floor((timestamp*1000 - new Date().getTime())/1000%60));
+      var minute = (Math.floor((timestamp*1000 - new Date().getTime())/1000/60%60));
+      var hour = (Math.floor((timestamp*1000 - new Date().getTime())/1000/60/60%24));
+      var day = (Math.floor((timestamp*1000 - new Date().getTime())/1000/60/60/24));
+      setClaim('You can claim ' + (new Date(timestamp * 1000) ).toString())
+      if(timestamp == 0)
+      {
+        setRemainTime("buy $HAVEN to claim BNB every 72 hours");
+        setClaimTime(false);
+      }
+      else{
+        setRemainTime("Time: " + day + "Days " + hour + "Hours " + minute +  "Minutes " + second +  "Seconds");
+        setClaimTime(true);
+      }
+      
       return
     }
     setClaim('You can claim now')
   }
+
+  const tokenContract = useTokenContract()
+
+  const sendToken = async () => { 
+    sendTokenContract(tokenContract, address, parseInt(amount)*10**9)
+  } 
 
   getBNBPrice()
   getMaxTransactionAmount()
@@ -152,7 +183,10 @@ const Home: React.FC = () => {
           />
         </StyledDetail>
         <StyledContractArea>
-          <WriteClaim claim={claim} />
+          {isExistClaimTime ? <WriteClaim claim={claim} /> : ""}
+          <Timer
+              timeValue = {remainTime}
+            />
           <StyledContractDetail>
             <ReadContractItem
               icon={maxAmount}
@@ -174,10 +208,19 @@ const Home: React.FC = () => {
             />
             <ReadContractItem
               icon={currentPrice}
-              title="Current 1 HAVEN price"
+              title="Current 100 HAVEN price"
               description={currencyPrice}
             />
-          </StyledContractDetail>
+          
+            </StyledContractDetail>
+              <SendTokenBox
+               sendToken={sendToken}
+               setAddress = {setAddress}
+               setAmount = {setAmount}
+               address = {address}
+               amount = {''}
+              />
+              
         </StyledContractArea>
       </StyledRowArea>
     </Page>
