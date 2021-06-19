@@ -10,11 +10,14 @@ const Page: React.FC = ({ children }) => (
 )
 
 const StyledPage = styled.div`
-  margin-top: 27px;
+  
   padding-bottom: 56px;
   padding-left: 15px;
   padding-right: 15px;
   padding-top: 32px;
+  position: relative;
+  background: linear-gradient(180deg,#98dff2,#98dff2 35%,#f0efed);
+  background-color: #f0efed;
 `
 
 const StyledMain = styled.div`
