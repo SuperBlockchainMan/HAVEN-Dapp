@@ -61,13 +61,6 @@ const StyledModal = styled.div`
   -webkit-box-align: center;
   align-items: center;
   @media (max-width: 800px) {
-    width: 60vw;
-  }
-  @media (max-width: 600px) {
-    width: 80vw;
-  }
-  @media (max-width: 400px) {
-    width: 90vw;
   }
 `
 

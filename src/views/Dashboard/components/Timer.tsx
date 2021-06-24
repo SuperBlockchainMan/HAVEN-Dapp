@@ -23,12 +23,10 @@ const StyledTokenArea = styled.div`
   font-size:20px;
 `
 interface ReadContractItemProps {
-  timeValue: any }
+  timeValue: any 
+}
 
-const SendTokenBox: React.FC<ReadContractItemProps> = ({
-  timeValue
-
-}) => {
+const SendTokenBox: React.FC<ReadContractItemProps> = ({ timeValue }) => {
   return (
     <StyledTokenArea>
       {timeValue}

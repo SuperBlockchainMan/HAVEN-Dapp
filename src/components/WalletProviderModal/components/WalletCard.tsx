@@ -18,7 +18,6 @@ const StyledConnectButton = styled.div`
 `
 
 const WalletCard: React.FC<WalletCardProps> = ({ icon, onConnect, title }) => (
- <div className="test">
   <Card>
     <CardContent onClick={onConnect}>
       <CardIcon>{icon}</CardIcon>
@@ -29,7 +28,6 @@ const WalletCard: React.FC<WalletCardProps> = ({ icon, onConnect, title }) => (
       </StyledConnectButton>
     </CardContent>
   </Card>
-  </div>
 )
 
 export default WalletCard

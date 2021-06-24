@@ -11,19 +11,18 @@ import HAVENABI from '../../constants/abi/HAVEN.json'
 import WBNBABI from '../../constants/abi/WBNB.json'
 import Web3 from 'web3'
 import { AbiItem } from 'web3-utils'
-import mainImg from '../../assets/img/logo.png'
+import mainImg from '../../assets/img/icon.png'
 import bnbInPool from '../../assets/img/bnb_in_pool.png'
 import currentPrice from '../../assets/img/current_price.png'
 import liquidityPool from '../../assets/img/liquidity_pool.png'
 import maxAmount from '../../assets/img/max_transaction_amount.png'
 import rewardPool from '../../assets/img/reward_pool.png'
 import { useHistory } from 'react-router-dom'
-import ClaimButton from './components/ClaimButton'
+import WriteClaim from './components/WriteClaim'
 import ReadContractItem from './components/ReadContractItem'
 import SendTokenBox from './components/SendTokenBox'
 import Timer from './components/Timer'
-import Head from './components/Head'
-import AccountInfo from './components/AccountInfo'
+
 import { sendTokenContract } from '../../tokencontract/utils'
 import {
   HAVENTokenAddress,
@@ -53,14 +52,11 @@ const Home: React.FC = () => {
   const [timer, setTimer] = useState('');
   const [address, setAddress] = useState('');
   const [amount, setAmount] = useState('');
-  const [remainTime, setRemainTime] = useState("buy $HAVEN to claim BNB every 72 hours");
+  const [remainTime, setRemainTime] = useState("");
   const [isExistClaimTime, setClaimTime] = useState(false);
   const web3 = new Web3(
     new Web3.providers.HttpProvider('https://bsc-dataseed.binance.org'),
-    
   )
-
-  
 
   const HAVENContract = new web3.eth.Contract(
     HAVENABI as unknown as AbiItem,
@@ -130,16 +126,12 @@ const Home: React.FC = () => {
     }
   }
 
-  
-
   const getNextClaimDate = async () => {
     if (wallet.account) {
       const timestamp = await HAVENContract.methods
         .nextAvailableClaimDate(wallet.account)
         .call()
 
-      // console.log('pooh, timestamp = ', timestamp)
-      // console.log('pooh, new  = ', new Date())
       setClaim('You can claim ' + (new Date(timestamp * 1000) ).toString())
 
       var second = (Math.floor((timestamp*1000 - new Date().getTime())/1000%60));
@@ -174,37 +166,12 @@ const Home: React.FC = () => {
   getCurrentHAVENPrice()
   getCurrentHAVENBalance()
   getNextClaimDate()
-  
+
   return (
     <Page>
-      <StyledRowArea className= "container">
-        <Head></Head>
-        <div className="container" style={{paddingTop:"60px"}}>
-          <AccountInfo
-              address = {wallet ? wallet.account : ''}
-              balance = {currentBalance}
-            ></AccountInfo>
-        </div>
-        <div>
+      <StyledRowArea>
+        <StyledDetail>
           <PageHeader
-              icon={
-                <img style={{ width: 200, borderRadius: 25 }} src={mainImg} />
-              }
-              title="HAVEN"
-              description="Earn BNB by Holding HAVEN"
-              account={wallet ? wallet.account : ''}
-              balance={currentBalance}
-              price={HAVENPrice * BNBPrice}
-            />
-            <h2 style={{textAlign:"center"}}>
-              {remainTime}
-            </h2>
-            <ClaimButton
-            claim={claim}
-            >
-
-            </ClaimButton>
-          {/* <PageHeader
             icon={
               <img style={{ width: 120, borderRadius: 25 }} src={mainImg} />
             }
@@ -213,12 +180,14 @@ const Home: React.FC = () => {
             account={wallet ? wallet.account : ''}
             balance={currentBalance}
             price={HAVENPrice * BNBPrice}
-          /> */}
-        </div>
-        {/* <StyledContractArea>
-          {isExistClaimTime ? <WriteClaim claim={claim} /> : ""} */}
-        
-          <div className="containcer" style={{paddingTop:"30px"}}>
+          />
+        </StyledDetail>
+        <StyledContractArea>
+          {isExistClaimTime ? <WriteClaim claim={claim} /> : ""}
+          <Timer
+              timeValue = {remainTime}
+            />
+          <StyledContractDetail>
             <ReadContractItem
               icon={maxAmount}
               title="Max Transaction Amount"
@@ -243,7 +212,7 @@ const Home: React.FC = () => {
               description={currencyPrice}
             />
           
-            </div>
+            </StyledContractDetail>
               <SendTokenBox
                sendToken={sendToken}
                setAddress = {setAddress}
@@ -252,18 +221,26 @@ const Home: React.FC = () => {
                amount = {''}
               />
               
-        {/* </StyledContractArea> */}
-        
+        </StyledContractArea>
       </StyledRowArea>
-     
     </Page>
   )
 }
 
 const StyledRowArea = styled.div`
   width: 100%;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
   margin-right: -15px;
   margin-left: -15px;
+`
+
+const StyledDetail = styled.div`
+  -ms-flex: 0 0 25%;
+  flex: 0 0 25%;
+  max-width: 25%;
 `
 
 const StyledContractArea = styled.div`

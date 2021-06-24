@@ -19,7 +19,12 @@ const StyledCardIcon = styled.div`
   display: flex;
   justify-content: center;
   margin: 10px;
- 
+  @media (max-width: 767px) {
+    height: 50px;
+    width: 50px;
+    border-radius: 25px;
+    margin: 0 auto 11px;
+  }
 `
 
 export default CardIcon

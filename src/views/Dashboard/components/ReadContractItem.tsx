@@ -3,14 +3,28 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 const StyledArea = styled.div`
-  width: 100%;
-  background-color: #f9fcff;
-  background-image: linear-gradient(147deg,#f9fcff 0,#dee4ea 74%);
-  border-bottom: 2px solid var(--clr-primary);
-  box-shadow: rgb(0 0 0 / 15%) 0 3px 3px 0;
-  flex: 1 1 auto;
-  padding: 1rem 1rem;
-
+  box-sizing: border-box;
+  margin: 0px;
+  width: 50%;
+  position: relative;
+  border: 1px solid #81cd2c;
+  border-radius: 20px;
+  font-family: 'Nunito';
+  box-shadow: 0 2px 8px 0 rgb(0 0 0 / 10%), 0 6px 20px 0 rgb(0 0 0 / 19%);
+  padding: 20px 0px;
+  color: black;
+  font-family: 'Nunito';
+  vertical-align: middle;
+  @media (max-width: 767px) {
+    margin-top: 30px;
+    padding: 48px 20px;
+  }
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  margin-right: -15px;
+  margin-left: -15px;
+  margin-bottom: 20px;
 `
 
 const StyledIconArea = styled.div`
@@ -55,20 +69,17 @@ const ReadContractItem: React.FC<ReadContractItemProps> = ({
   description,
 }) => {
   return (
-    <div className="card mb-1" style={{width:"100%"}}>
-        <div className="card-body dapp-card" style={{backgroundColor: "#f9fcff"}}>
-            <div className="row d-flex flex-wrap justify-content-center align-items-center flex-row">
-                <div className="col col-4 text-end">
-                  <img className="dapp-img mx-auto" src={icon} data-nsfw-filter-status="sfw" style={{visibility:"visible"}} />
-                </div>
-                <div className="col col-8 text-start">
-                    <h4>{title}</h4>
-                    <h6 className="text-muted mb-2">{description}<br/></h6>
-                </div>
-            </div>
-        </div>
-    </div>
- 
+    <StyledArea>
+      <StyledIconArea>
+        <StyledIcon>
+          <img style={{ height: 80, borderRadius: 25 }} src={icon} />
+        </StyledIcon>
+      </StyledIconArea>
+      <StyledInfoArea>
+        <StyledInfo>{title}</StyledInfo>
+        <StyledInfo>{description}</StyledInfo>
+      </StyledInfoArea>
+    </StyledArea>
   )
 }
 

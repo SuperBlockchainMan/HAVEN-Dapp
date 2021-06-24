@@ -85,30 +85,7 @@ const SendTokenBox: React.FC<ReadContractItemProps> = ({
   }
 
   return (
-    <div className="row d-flex flex-wrap justify-content-evenly align-items-center flex-column">
-        <div className="col">
-            <div className="card">
-                <div className="card-body dapp-card">
-                    <div className="row d-flex flex-wrap justify-content-center align-items-center flex-row">
-                        <div className="col col-4 text-end"><label className="col-form-label">Recipient (address)</label></div>
-                        <div className="col col-8 text-start"><input type="text" onChange={changeValue} className="w-100"/></div>
-                    </div>
-                    <div className="row d-flex flex-wrap justify-content-center align-items-center flex-row">
-                        <div className="col col-4 text-end"><label className="col-form-label" >Amount ($HAVEN)</label></div>
-                        <div className="col col-8 text-start"><input type="text" className="w-100" onChange={changeAmount}/></div>
-                    </div>
-                    <div style={{width:"30%", paddingTop:"20px", margin: "auto"}}>
-                      <StyledComponent onClick={sendToken} >
-                          <span>
-                            Send
-                          </span>
-                        </StyledComponent>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    /*{ <StyledTokenArea>
+    <StyledTokenArea>
       <StyledTokenAdress >
       <StyledLabelArea>
         <label htmlFor="" >Recipient (address)</label>
@@ -134,7 +111,7 @@ const SendTokenBox: React.FC<ReadContractItemProps> = ({
           </StyledComponent>
       </div>
       
-    </StyledTokenArea> }*/
+    </StyledTokenArea>
     )
 }
 

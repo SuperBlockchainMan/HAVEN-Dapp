@@ -123,7 +123,7 @@ const WriteClaim: React.FC<WriteClaimProps> = ({ claim }) => {
   const tokenContract = useTokenContract()
 
   const handleClaimClick = () => {
-    claimBNBReward(tokenContract) //use this style you can use two parameter more
+    claimBNBReward(tokenContract)
   }
 
   getMaxTransactionAmount()
