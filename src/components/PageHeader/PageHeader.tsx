@@ -26,16 +26,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({
     reset()
   }, [reset])
 
-  const getAccountAddress = () => {
-    if (account) {
-      var address =
-        account.toString().substring(0, 8) +
-        '...' +
-        account.toString().substr(account.length - 8)
-      return address
-    }
-    return ''
-  }
+
 
   const myBalance = 'HAVEN ' + balance
   const token = '(' + (balance * price).toFixed(2) + ' $)'
@@ -47,8 +38,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({
     <Container size="sm">
       <StyledPageHeader>
         <StyledIcon>{icon}</StyledIcon>
-        <StyledTitle>{title}</StyledTitle>
-        <StyledDescription>{description}</StyledDescription>
+        {/* <StyledDescription>{description}</StyledDescription>
         <StyledSignoutButtonArea>
           <StyledExternalLink href={buyAddress} target="__blank">
             Buy $HAVEN
@@ -69,7 +59,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({
             text="Sign out"
             variant="secondary"
           />
-        </StyledSignoutButtonArea>
+        </StyledSignoutButtonArea> */}
       </StyledPageHeader>
     </Container>
   )

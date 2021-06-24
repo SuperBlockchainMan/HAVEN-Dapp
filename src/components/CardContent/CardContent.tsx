@@ -17,6 +17,7 @@ const StyledCardContent = styled.div`
   position: relative;
   height: 30px;
   align-items: center;
+  justify-content:space-evenly;
   @media (max-width: 767px) {
     left: 0px;
     height: auto;

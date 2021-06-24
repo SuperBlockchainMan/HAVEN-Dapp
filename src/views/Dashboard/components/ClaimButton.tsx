@@ -11,6 +11,7 @@ import HAVENABI from '../../../constants/abi/HAVEN.json'
 import { claimBNBReward } from '../../../tokencontract/utils'
 import useTokenContract from '../../../hooks/useTokenContract'
 import { HAVENTokenAddress } from '../../../constants/tokenAddresses'
+import claimImage from  '../../../assets/img/claim.png'
 
 const StyledArea = styled.div`
   box-sizing: border-box;
@@ -130,42 +131,16 @@ const WriteClaim: React.FC<WriteClaimProps> = ({ claim }) => {
   getBalance()
 
   return (
-    <StyledArea>
-      <StyledIconArea>
-        <StyledInfo> Reward Pool </StyledInfo>
-        <StyledIcon>
-          <img style={{ height: 80, borderRadius: 25 }} src={rewardPool} />
-        </StyledIcon>
-        <StyledInfo> BNB {BNBRewardPool} </StyledInfo>
-        {/* <br />
-        <StyledInfo> Gift : $HAVEN 200 </StyledInfo> */}
-      </StyledIconArea>
-      <StyledInfoArea>
-        <StyledInfo> {claim} </StyledInfo>
-        <StyledInfo>
-          My reward: <StyledValue>0.000000 BNB</StyledValue>
-        </StyledInfo>
-        <StyledNote>
-          *pool is always changing based on buys, sells, and collects by others,
-          learn more here{' '}
-          <span>
-            <a href="#" target="_blank">
-              <i className="fa fa-question-circle"></i>
-            </a>
-          </span>
-        </StyledNote>
-        <StyledInfo>
-          You will be received {calculatedReward} BNB (after tax)
-        </StyledInfo>
-        <StyledClaimButtonArea>
-          <Button onClick={handleClaimClick}>
-            <span>
-              <i className="fa fa-gift"></i> Claim My Reward
-            </span>
-          </Button>
-        </StyledClaimButtonArea>
-      </StyledInfoArea>
-    </StyledArea>
+    
+    <div className="col" style={{textAlign: "center"}}>
+      {/* <button className="p-0" style={{border:"none"}} onClick={handleClaimClick} >
+        <img src={claimImage}/>
+      </button> */}
+      <button onClick={handleClaimClick} className="cybr-btn" style={{backgroundImage:`url("assets/image/claim.png")`, backgroundPosition:"center"}}>
+      Claim $BNB
+      <span  className="cybr-btn__glitch" data-nsfw-filter-status="swf">Claim $BNB</span>
+      <span  className="cybr-btn__tag" data-nsfw-filter-status="swf">Every 72 hours</span>
+  </button></div>
   )
 }
 

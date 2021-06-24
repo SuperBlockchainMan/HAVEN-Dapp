@@ -23,6 +23,15 @@ const StyledModalTitle = styled.div`
   text-align: left;
   @media (max-width: 767px) {
     width: 100%;
+    padding-left:20px;
+  }
+
+  @media (max-width: 600px) {
+    width: 100%;
+  }
+
+  @media (max-width: 400px) {
+    width: 100%;
   }
 `
 

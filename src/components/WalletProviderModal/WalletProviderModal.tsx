@@ -36,16 +36,16 @@ const WalletProviderModal: React.FC<ModalProps> = ({ onDismiss }) => {
             />
             <Spacer />
             <WalletCard
-              icon={<img src={bscLogo} alt="BSC" style={{ height: 32 }} />}
+              icon={<img src={bscLogo} alt="Binance Smart Chain" style={{ height: 32 }} />}
               onConnect={() => connect('bsc')}
               title="BSC wallet"
             />
-            {/* <Spacer />
-              <WalletCard
-                icon={<img src={trustLogo} alt='BSC' style={{ height: 32 }} />}
-                onConnect={() => connect('walletconnect')}
-                title="Wallet connect"
-              /> */}
+            <Spacer />
+            <WalletCard
+              icon={<img src={trustLogo} alt='Trust' style={{ height: 32 }} />}
+              onConnect={() => connect('injected')}
+              title="Trust Wallet"
+            />
           </StyledWalletCard>
         </StyledWalletsWrapper>
       </ModalContent>
